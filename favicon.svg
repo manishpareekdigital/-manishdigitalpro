@@ -1,0 +1,17 @@
+<svg width="120" height="120" viewBox="0 0 120 120" fill="none" xmlns="http://www.w3.org/2000/svg">
+  <defs>
+    <linearGradient id="brand" x1="0%" y1="100%" x2="100%" y2="0%">
+      <stop offset="0%" stop-color="#4f46e5" />
+      <stop offset="100%" stop-color="#a855f7" />
+    </linearGradient>
+  </defs>
+  
+  <g transform="translate(10, 10)">
+    <!-- M Shape -->
+    <path d="M25 85 L25 45 L50 70 L75 45 L75 85" stroke="url(#brand)" stroke-width="14" stroke-linecap="round" stroke-linejoin="round"/>
+    <!-- Upward Arrow Shaft -->
+    <path d="M75 45 L75 25" stroke="url(#brand)" stroke-width="14" stroke-linecap="round"/>
+    <!-- Arrow Head -->
+    <path d="M55 40 L75 20 L95 40" stroke="url(#brand)" stroke-width="14" stroke-linecap="round" stroke-linejoin="round"/>
+  </g>
+</svg>

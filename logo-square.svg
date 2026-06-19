@@ -1,0 +1,22 @@
+<svg width="400" height="400" viewBox="0 0 400 400" fill="none" xmlns="http://www.w3.org/2000/svg">
+  <defs>
+    <linearGradient id="brand" x1="0%" y1="100%" x2="100%" y2="0%">
+      <stop offset="0%" stop-color="#4f46e5" />
+      <stop offset="100%" stop-color="#a855f7" />
+    </linearGradient>
+  </defs>
+  
+  <!-- Scaled Icon Center -->
+  <g transform="translate(125, 80) scale(1.5)">
+    <!-- Left Leg and Middle V -->
+    <path d="M25 85 L25 45 L50 70 L75 45 L75 85" stroke="url(#brand)" stroke-width="12" stroke-linecap="round" stroke-linejoin="round"/>
+    <!-- Right Leg Extension -->
+    <path d="M75 45 L75 25" stroke="url(#brand)" stroke-width="12" stroke-linecap="round"/>
+    <!-- Arrow Head on Top Right -->
+    <path d="M55 40 L75 20 L95 40" stroke="url(#brand)" stroke-width="12" stroke-linecap="round" stroke-linejoin="round"/>
+  </g>
+  
+  <!-- Text -->
+  <text x="200" y="280" font-family="'Inter', system-ui, -apple-system, sans-serif" font-weight="800" font-size="36" fill="#ffffff" text-anchor="middle" letter-spacing="-1">Manish Digital</text>
+  <text x="200" y="320" font-family="'Inter', system-ui, -apple-system, sans-serif" font-weight="600" font-size="14" fill="#94a3b8" text-anchor="middle" letter-spacing="2">GROWING BUSINESSES DIGITALLY</text>
+</svg>
