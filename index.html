@@ -637,9 +637,34 @@
             box-shadow: 0 0 0 4px rgba(79, 70, 229, 0.1);
         }
 
+        .form-control.error {
+            border-color: #ef4444;
+            box-shadow: 0 0 0 4px rgba(239, 68, 68, 0.1);
+        }
+
+        .field-error {
+            color: #f87171;
+            font-size: 0.85rem;
+            margin-top: -1rem;
+            margin-bottom: 1rem;
+            display: none;
+        }
+
         textarea.form-control {
             resize: vertical;
             min-height: 150px;
+        }
+
+        .form-msg-success {
+            background: rgba(37, 211, 102, 0.1);
+            color: #4ade80;
+            border: 1px solid rgba(37, 211, 102, 0.2);
+        }
+
+        .form-msg-error {
+            background: rgba(239, 68, 68, 0.1);
+            color: #f87171;
+            border: 1px solid rgba(239, 68, 68, 0.2);
         }
 
         /* Floating Elements */
@@ -1192,22 +1217,59 @@
                 </div>
                 
                 <div class="glass-card">
-                    <h3 style="color: white; font-size: 1.8rem; margin-bottom: 2rem;">Send a Message</h3>
-                    <form id="contactForm" onsubmit="submitForm(event)">
-                        <input type="text" id="name" class="form-control" placeholder="Your Name" required>
-                        <input type="tel" id="phone" class="form-control" placeholder="Mobile Number" required>
-                        <input type="text" id="business" class="form-control" placeholder="Business Name">
-                        <select id="service" class="form-control" required style="appearance: none; cursor: pointer;">
-                            <option value="" disabled selected>Select Service Required...</option>
-                            <option value="website">Website Development</option>
-                            <option value="seo">SEO Services</option>
-                            <option value="ads">Google/Facebook Ads</option>
-                            <option value="other">Other Digital Solutions</option>
-                        </select>
-                        <textarea id="message" class="form-control" placeholder="How can we help you grow?" required></textarea>
+                    <h3 style="color: white; font-size: 1.8rem; margin-bottom: 0.5rem;">Send a Message</h3>
+                    <p style="color: var(--text-muted); margin-bottom: 2rem; font-size: 0.95rem;">Fill in the details below and we'll get back to you within 24 hours.</p>
+                    
+                    <!-- 
+                        FORMSPREE SETUP INSTRUCTIONS:
+                        1. Go to https://formspree.io and create a free account
+                        2. Create a new form and copy your Form ID (e.g., xyzabcde)
+                        3. Replace YOUR_FORMSPREE_ID below with your actual Form ID
+                        4. Formspree will send email notifications to your registered email
+                    -->
+                    <form id="contactForm" novalidate>
+                        <input type="text" name="name" id="name" class="form-control" placeholder="Your Name *" required minlength="2">
+                        <div class="field-error" id="nameError">Please enter your name (at least 2 characters).</div>
                         
-                        <button type="submit" class="btn btn-primary" style="width: 100%; padding: 18px; font-size: 1.2rem;" id="submitBtn">Submit Inquiry</button>
-                        <div id="formMsg" style="margin-top: 1.5rem; text-align: center; display: none; padding: 15px; border-radius: 10px; font-weight: 500;"></div>
+                        <input type="tel" name="phone" id="phone" class="form-control" placeholder="Mobile Number *" required pattern="[0-9+\-\s]{10,15}">
+                        <div class="field-error" id="phoneError">Please enter a valid mobile number (10-15 digits).</div>
+                        
+                        <input type="text" name="business" id="business" class="form-control" placeholder="Business Name">
+                        
+                        <select name="service" id="service" class="form-control" required style="appearance: none; cursor: pointer;">
+                            <option value="" disabled selected>Select Service Required *</option>
+                            <option value="Website Development">Website Development</option>
+                            <option value="SEO Services">SEO Services</option>
+                            <option value="Google Ads">Google Ads</option>
+                            <option value="Facebook/Instagram Ads">Facebook/Instagram Ads</option>
+                            <option value="Social Media Marketing">Social Media Marketing</option>
+                            <option value="WhatsApp Marketing">WhatsApp Marketing</option>
+                            <option value="Graphic Design">Graphic Design</option>
+                            <option value="Domain & Hosting">Domain & Hosting</option>
+                            <option value="Other">Other Digital Solutions</option>
+                        </select>
+                        <div class="field-error" id="serviceError">Please select a service.</div>
+                        
+                        <select name="budget" id="budget" class="form-control" style="appearance: none; cursor: pointer;">
+                            <option value="" disabled selected>Select Budget Range</option>
+                            <option value="Under ₹5,000">Under ₹5,000</option>
+                            <option value="₹5,000 - ₹10,000">₹5,000 - ₹10,000</option>
+                            <option value="₹10,000 - ₹25,000">₹10,000 - ₹25,000</option>
+                            <option value="₹25,000 - ₹50,000">₹25,000 - ₹50,000</option>
+                            <option value="₹50,000+">₹50,000+</option>
+                            <option value="Not Sure">Not Sure Yet</option>
+                        </select>
+                        
+                        <textarea name="message" id="message" class="form-control" placeholder="How can we help you grow? *" required minlength="10"></textarea>
+                        <div class="field-error" id="messageError">Please enter your message (at least 10 characters).</div>
+                        
+                        <!-- Honeypot anti-spam field (hidden from users) -->
+                        <input type="text" name="_gotcha" style="display: none;">
+                        
+                        <button type="submit" class="btn btn-primary" style="width: 100%; padding: 18px; font-size: 1.2rem;" id="submitBtn">
+                            Submit Inquiry
+                        </button>
+                        <div id="formMsg" style="margin-top: 1.5rem; text-align: center; display: none; padding: 15px; border-radius: 12px; font-weight: 500; font-size: 1rem;"></div>
                     </form>
                 </div>
             </div>
@@ -1313,35 +1375,156 @@
             }
         }
 
-        // Form Submission Simulation
-        function submitForm(e) {
+        // =====================================================
+        // FORMSPREE CONTACT FORM INTEGRATION
+        // =====================================================
+        // SETUP: Replace 'YOUR_FORMSPREE_ID' with your actual
+        // Formspree form ID from https://formspree.io
+        // Example: const FORMSPREE_ID = 'xyzabcde';
+        // =====================================================
+        const FORMSPREE_ID = 'YOUR_FORMSPREE_ID';
+        const FORMSPREE_URL = `https://formspree.io/f/${FORMSPREE_ID}`;
+
+        // Clear field error styling
+        function clearFieldError(fieldId) {
+            const field = document.getElementById(fieldId);
+            const error = document.getElementById(fieldId + 'Error');
+            if (field) field.classList.remove('error');
+            if (error) error.style.display = 'none';
+        }
+
+        // Show field error
+        function showFieldError(fieldId) {
+            const field = document.getElementById(fieldId);
+            const error = document.getElementById(fieldId + 'Error');
+            if (field) field.classList.add('error');
+            if (error) error.style.display = 'block';
+        }
+
+        // Attach real-time clearing on input
+        ['name', 'phone', 'service', 'message'].forEach(id => {
+            const el = document.getElementById(id);
+            if (el) {
+                el.addEventListener('input', () => clearFieldError(id));
+                el.addEventListener('change', () => clearFieldError(id));
+            }
+        });
+
+        // Validate all fields
+        function validateForm() {
+            let isValid = true;
+            const name = document.getElementById('name');
+            const phone = document.getElementById('phone');
+            const service = document.getElementById('service');
+            const message = document.getElementById('message');
+
+            // Name: required, min 2 chars
+            if (!name.value.trim() || name.value.trim().length < 2) {
+                showFieldError('name');
+                isValid = false;
+            }
+
+            // Phone: required, 10-15 digit pattern
+            const phonePattern = /^[0-9+\-\s]{10,15}$/;
+            if (!phone.value.trim() || !phonePattern.test(phone.value.trim())) {
+                showFieldError('phone');
+                isValid = false;
+            }
+
+            // Service: required
+            if (!service.value) {
+                showFieldError('service');
+                isValid = false;
+            }
+
+            // Message: required, min 10 chars
+            if (!message.value.trim() || message.value.trim().length < 10) {
+                showFieldError('message');
+                isValid = false;
+            }
+
+            return isValid;
+        }
+
+        // Sanitize input to prevent XSS
+        function sanitize(str) {
+            const div = document.createElement('div');
+            div.textContent = str;
+            return div.innerHTML;
+        }
+
+        // Form submission handler
+        document.getElementById('contactForm').addEventListener('submit', async function(e) {
             e.preventDefault();
+
+            // Clear all previous errors
+            ['name', 'phone', 'service', 'message'].forEach(id => clearFieldError(id));
+
+            // Validate
+            if (!validateForm()) return;
+
             const btn = document.getElementById('submitBtn');
             const msg = document.getElementById('formMsg');
-            
-            btn.innerHTML = 'Securely Sending...';
+
+            // Show loading state
+            btn.innerHTML = '⏳ Sending...';
             btn.disabled = true;
             btn.style.opacity = '0.7';
+            btn.style.cursor = 'not-allowed';
+            msg.style.display = 'none';
 
-            // Simulate API call
-            setTimeout(() => {
+            // Collect sanitized form data
+            const formData = {
+                name: sanitize(document.getElementById('name').value.trim()),
+                phone: sanitize(document.getElementById('phone').value.trim()),
+                business: sanitize(document.getElementById('business').value.trim()),
+                service: sanitize(document.getElementById('service').value),
+                budget: sanitize(document.getElementById('budget').value || 'Not specified'),
+                message: sanitize(document.getElementById('message').value.trim()),
+                _subject: 'New Inquiry — Manish Digital Website'
+            };
+
+            try {
+                const response = await fetch(FORMSPREE_URL, {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'Accept': 'application/json'
+                    },
+                    body: JSON.stringify(formData)
+                });
+
+                if (response.ok) {
+                    // SUCCESS
+                    msg.innerHTML = '✅ Thank you! Your inquiry has been sent successfully. We will contact you within 24 hours.';
+                    msg.className = 'form-msg-success';
+                    msg.style.display = 'block';
+                    document.getElementById('contactForm').reset();
+                } else {
+                    // FORMSPREE ERROR
+                    const data = await response.json();
+                    const errorText = (data.errors && data.errors.map(err => err.message).join(', ')) || 'Something went wrong.';
+                    msg.innerHTML = '❌ Submission failed: ' + errorText + ' Please try again or contact us directly.';
+                    msg.className = 'form-msg-error';
+                    msg.style.display = 'block';
+                }
+            } catch (error) {
+                // NETWORK ERROR
+                msg.innerHTML = '❌ Network error. Please check your internet connection or contact us directly at +91 9672930611.';
+                msg.className = 'form-msg-error';
+                msg.style.display = 'block';
+            } finally {
                 btn.innerHTML = 'Submit Inquiry';
                 btn.disabled = false;
                 btn.style.opacity = '1';
-                
-                msg.innerHTML = 'Thank you! Your premium inquiry has been successfully received.';
-                msg.style.background = 'rgba(37, 211, 102, 0.1)';
-                msg.style.color = '#4ade80';
-                msg.style.border = '1px solid rgba(37, 211, 102, 0.2)';
-                msg.style.display = 'block';
-                
-                document.getElementById('contactForm').reset();
-                
+                btn.style.cursor = 'pointer';
+
+                // Auto-hide message after 8 seconds
                 setTimeout(() => {
                     msg.style.display = 'none';
-                }, 5000);
-            }, 1800);
-        }
+                }, 8000);
+            }
+        });
     </script>
 </body>
 </html>
